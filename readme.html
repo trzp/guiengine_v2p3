@@ -1,0 +1,204 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <title></title>
+<style id="system" type="text/css">*{margin:0;padding:0;}body {	font:13.34px helvetica,arial,freesans,clean,sans-serif;	color:black;	line-height:1.4em;	background-color: #F8F8F8;	padding: 0.7em;}p {	margin:1em 0;	line-height:1.5em;}table {	font-size:inherit;	font:100%;	margin:1em;}table th{border-bottom:1px solid #bbb;padding:.2em 1em;}table td{border-bottom:1px solid #ddd;padding:.2em 1em;}input[type=text],input[type=password],input[type=image],textarea{font:99% helvetica,arial,freesans,sans-serif;}select,option{padding:0 .25em;}optgroup{margin-top:.5em;}pre,code{font:12px Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;}pre {	margin:1em 0;	font-size:12px;	background-color:#eee;	border:1px solid #ddd;	padding:5px;	line-height:1.5em;	color:#444;	overflow:auto;	-webkit-box-shadow:rgba(0,0,0,0.07) 0 1px 2px inset;	-webkit-border-radius:3px;	-moz-border-radius:3px;border-radius:3px;white-space: pre-wrap;word-wrap:break-word;}pre code {	padding:0;	font-size:12px;	background-color:#eee;	border:none;}code {	font-size:12px;	background-color:#f8f8ff;	color:#444;	padding:0 .2em;	border:1px solid #dedede;}img{border:0;max-width:100%;}abbr{border-bottom:none;}a{color:#4183c4;text-decoration:none;}a:hover{text-decoration:underline;}a code,a:link code,a:visited code{color:#4183c4;}h2,h3{margin:1em 0;}h1,h2,h3,h4,h5,h6{border:0;}h1{font-size:170%;border-top:4px solid #aaa;padding-top:.5em;margin-top:1.5em;}h1:first-child{margin-top:0;padding-top:.25em;border-top:none;}h2{font-size:150%;margin-top:1.5em;border-top:4px solid #e0e0e0;padding-top:.5em;}h3{margin-top:1em;}hr{border:1px solid #ddd;}ul{margin:1em 0 1em 2em;}ol{margin:1em 0 1em 2em;}ul li,ol li{margin-top:.5em;margin-bottom:.5em;}ul ul,ul ol,ol ol,ol ul{margin-top:0;margin-bottom:0;}blockquote{margin:1em 0;border-left:5px solid #ddd;padding-left:.6em;color:#555;}dt{font-weight:bold;margin-left:1em;}dd{margin-left:2em;margin-bottom:1em;}@media screen and (min-width: 768px) {    body {        width: 748px;        margin:10px auto;    }}</style><style id="custom" type="text/css"></style></head>
+<body><p><img src="bciros_logo.png" alt="bciros">
+
+</p>
+<p>Copyright (C) 2018, Nudt, JingshengTang, All Rights Reserved
+
+</p>
+<p>Author: Jingsheng Tang
+
+</p>
+<p>Email: mrtang@nudt.edu.cn
+
+</p>
+<h2><a href="http://weibo.com/ihubo">BCIROS</a>,<a href="http://weibo.com/ihubo">GuiEngine</a>,<a href="http://weibo.com/ihubo">Phase</a></h2>
+<h2>GuiEngine是什么?</h2>
+<p>一个简洁的图形刺激引擎
+
+</p>
+<h2>GuiEngine的特性</h2>
+<ul>
+<li>为了确保图形刺激的精确性，我们使用了opengl硬件加速技术，并且运用了垂直同步(Vertical Hold)方法，使每一帧图形都能被精确渲染</li>
+<li>EEG刺激实验的信号标签由GuiEngine来发射，确保标签记录的时刻是被请求的图形刺激真正被渲染时。</li>
+<li>跨平台，目前已在windows和linux系统经过测试</li>
+</ul>
+<h2>GuiEngine的下载与安装</h2>
+<ul>
+<li>请确保您的电脑安装有<a href="https://www.python.org/">python</a>和<a href="https://www.pygame.org/">pygame</a>包</li>
+<li><p><a href="https://github.com/trzp/guiengine">下载</a>所有文件，修改setup.py中python_path，比如'c:\Python27'或者'/usr/lib/python2.7'，并运行setup.py即完成安装</p>
+<pre><code class="lang-python">  if __name__ == '__main__':
+      install_package('guiengine_trzp',python_path)</code></pre>
+</li>
+</ul>
+<h2>依赖库：<a href="https://github.com/trzp/sysclock">get_global_clock_rz</a></h2>
+<h2>GuiEngine编程</h2>
+<ul>
+<li><p>导入类并使用：</p>
+<pre><code class="lang-python">  from guiengine import GuiEngine
+
+  guieng = GuiEngine(stims,Q_c2g,E_g2p,Q_g2s)
+  guieng.StartRun()</code></pre>
+</li>
+<li>类的方法：<ul>
+<li>_<em>init_</em>(self,stims,Q_c2g,E_g2p,Q_g2s):实例化引擎</li>
+<li>StartRun()：启动引擎</li>
+</ul>
+</li>
+</ul>
+<h2>GuiEngine._<em>init_</em>参数说明</h2>
+<h3>参数：stims:</h3>
+<ul>
+<li>python字典(未来我们将支持xml超文本标记语言描述的文件或者字符串，敬请期待)，用来描述图形界面的布局。</li>
+<li><p>示例：</p>
+<pre><code class="lang-python">sti = {'screen':{'size':(600,500),'color':(0,0,0)},
+      'cue':{'class':'Block','parm':{'size':(100,40),'position':(600/2,30),
+      'anchor':'center','visible':True,'forecolor':(0,0,0),'text':'tangjign',
+      'textsize':25,'textcolor':(0,0,255),'textanchor':'center'}}}</code></pre>
+<ul>
+<li>说明：该字典的形式为{'screen':{描述screen的属性}，'刺激1':{对刺激1的描述}，'刺激2':{对刺激2的描述}，}</li>
+<li><p>至少应当包含对screen的描述，screen的属性有：</p>
+<ul>
+<li>size: (width,height)</li>
+<li>type: fullscreen/normal</li>
+<li>frameless: True/False</li>
+<li>color: (R,G,B)</li>
+<li>caption: string</li>
+<li>Fps: int, strongly suggest you set Fps as the same with system's Fps</li>
+<li>补充说明：Fps应当设置为与系统一致，确保在系统垂直同步开启失败时能够保持正确同步。另外，当且仅当type为fullscreen时，硬件加速和垂直同步才可开启。因此，在在线使用时，应当使用fullscreen模式。</li>
+</ul>
+</li>
+<li><p>对其他刺激的描述：如例子中key'刺激1'为对该刺激唯一的标识，其item为一个字典，来具体描述其内容，包含class和parm两个key。class对应了刺激图形类型，parm用来描述这个刺激图形的参数。</p>
+<ul>
+<li>目前支持的刺激图形有：<ul>
+<li>Block: 用以标识方块，文本等</li>
+<li>sinBlock: 用以表示灰度以正弦波规律变化的方块</li>
+<li>mBlock： 用以标识灰度以随机编码调制变化的方块</li>
+<li>ImageBox：用以加载图像的纹理</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>参数：Q_c2g,E_g2p,Q_g2s，用于工作进程/线程与guiengine的交互</h3>
+<ul>
+<li>一旦GuiEngine启动(StartRun)，线程将被阻塞。因此我们需要通过另一个线程或者进程（此处称其为工作线程/进程）通过Q_c2g,E_g2p,Q_g2s与之交互。</li>
+<li>Q_c2g: 这是一个能够实现线程/进程之间传递列表的类，当工作进程和GuiEngine进程具有亲缘关系时，您可以直接使用multiprocessing.Queue；<ul>
+<li>当您需要通过远程或者另一个与GuiEngine进程没有亲缘关系的工作进程来与GuiEngine交互时，您可以使用命名管道或者socket来实现这个类。</li>
+<li>您需要实现这个类的一个方法：<ul>
+<li>[stims_update,trigger]=x.get():返回一个列表，列表内包含两个字典。该函数为阻塞型函数，切不可为非阻塞型。</li>
+<li>显然，命名管道和socket只能传递字符串，因此您需要做一定的工作将字符串解析为列表和字典。一个技巧是使用xml超文本标记字符串或者json文件作为中间内容，在请求端使用对应工具将dict转换为xml/json文件，在响应端使用对应工具将字符串解析为字典。Python的第三方库无所不能！</li>
+</ul>
+</li>
+<li>Q_c2g传递的内容：[stims_update,trigger]<ul>
+<li>stims_upate: {'ID':{parms}}，ID对应此前初始化时的唯一标识，否则该内容将被忽略。parms为字典：描述该对象的属性。示例：</li>
+<li>trigger:{'trigger_name1':value1，'trigger_name2':value2}, 即描述trigger对应的值<pre><code class="lang-python">q.put([{'Flsh1':{'forecolor':(255,0,0),'text':'hello'}},{'stimulus_code':1}])</code></pre>
+</li>
+</ul>
+</li>
+<li>补充说明：当您通过Q_c2g传递 __quit__ 字符串时，将终止GuiEngine进程</li>
+</ul>
+</li>
+<li>E_g2p: 这是一个能够实现线程/进程之间传递事件的类，当工作进程和GuiEngine进程具有亲缘关系时，您可以直接使用multiprocessing.Event；<ul>
+<li>同理您可以通过其他方法实现这个类</li>
+<li>您需要实现这个类的几个方法：<ul>
+<li>x.set(): 向外发送一个事件</li>
+<li>接受端需要实现非阻塞函数x.isSet()来判断x.set()是否被调用，即是否发射了事件</li>
+</ul>
+</li>
+<li>工作进程通过E_g2p查询.isSet()来得知GuiEngine是否触发了用户退出事件，GuiEngine运行中可通过Esc键退出程序</li>
+</ul>
+</li>
+<li>Q_g2s: 和Q_c2g类似。但用来向工作线程发射带时间戳的trigger。</li>
+</ul>
+<h2>example1</h2>
+<p>这是一个静态示例，这个界面仅仅显示一个text,它将不会有任何动态效果
+</p>
+<pre><code class="lang-python">from guiengine import GuiEngine
+from multiprocessing import Queue 
+from multiprocessing import Event
+import multiprocessing
+import time
+
+layout = {'screen':{'size':(200,200),'color':(0,0,0),'type':'normal',
+                        'Fps':60,'caption':'this is an example'},
+             'cue':{'class':'Block','parm':{'size':(100,100),'position':(100,100),
+                    'forecolor':(128,128,128),'text':'hello world','visible':True}}}
+
+def exmaple1():
+    Q_c2g = Queue()
+    E_g2p = Event()
+    Q_g2s = Queue()
+
+    gui = GuiEngine(layout,Q_c2g,E_g2p,Q_g2s)
+    gui.StartRun()
+
+
+if __name__ == '__main__':
+    example1()</code></pre>
+<h2>example2</h2>
+<p>这个一个动态示例，我们将guimachine放在一个子进程里面运行，主进程通过Q_c2g与之交互
+
+</p>
+<pre><code class="lang-python">from guiengine import GuiEngine
+from multiprocessing import Queue 
+from multiprocessing import Event
+import multiprocessing
+import time
+
+layout = {'screen':{'size':(200,200),'color':(0,0,0),'type':'normal',
+                        'Fps':60,'caption':'this is an example'},
+             'cue':{'class':'Block','parm':{'size':(100,100),'position':(100,100),
+                    'forecolor':(128,128,128),'text':'hello world','visible':True}}}
+
+def proc(layout,Q_c2g,E_g2p,Q_g2s):
+    gui = GuiEngine(layout,Q_c2g,E_g2p,Q_g2s)
+    gui.StartRun()
+
+def example2():
+    Q_c2g = Queue()
+    E_g2p = Event()
+    Q_g2s = Queue()
+    process = multiprocessing.Process(target=proc,args=(layout,Q_c2g,E_g2p,Q_g2s))
+    process.start()
+
+    while True:
+        if E_g2p.is_set():break
+        Q_c2g.put([{'cue':{'forecolor':(200,200,0)}},{'code':0}])
+        time.sleep(0.5)
+        Q_c2g.put([{'cue':{'forecolor':(100,100,0)}},{'code':0}])
+        time.sleep(0.5)
+
+    print 'main process exit'
+
+
+if __name__ == '__main__':
+    example2()</code></pre>
+<p>Edit by Jingsheng Tang
+
+</p>
+<p>give thanks to MaHua
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</p>
+<p>Edit By <a href="http://mahua.jser.me">MaHua</a>
+Edit By <a href="http://mahua.jser.me">MaHua</a></p>
+</body><style type="text/css">#yddContainer{display:block;font-family:Microsoft YaHei;position:relative;width:100%;height:100%;top:-4px;left:-4px;font-size:12px;border:1px solid}#yddTop{display:block;height:22px}#yddTopBorderlr{display:block;position:static;height:17px;padding:2px 28px;line-height:17px;font-size:12px;color:#5079bb;font-weight:bold;border-style:none solid;border-width:1px}#yddTopBorderlr .ydd-sp{position:absolute;top:2px;height:0;overflow:hidden}.ydd-icon{left:5px;width:17px;padding:0px 0px 0px 0px;padding-top:17px;background-position:-16px -44px}.ydd-close{right:5px;width:16px;padding-top:16px;background-position:left -44px}#yddKeyTitle{float:left;text-decoration:none}#yddMiddle{display:block;margin-bottom:10px}.ydd-tabs{display:block;margin:5px 0;padding:0 5px;height:18px;border-bottom:1px solid}.ydd-tab{display:block;float:left;height:18px;margin:0 5px -1px 0;padding:0 4px;line-height:18px;border:1px solid;border-bottom:none}.ydd-trans-container{display:block;line-height:160%}.ydd-trans-container a{text-decoration:none;}#yddBottom{position:absolute;bottom:0;left:0;width:100%;height:22px;line-height:22px;overflow:hidden;background-position:left -22px}.ydd-padding010{padding:0 10px}#yddWrapper{color:#252525;z-index:10001;background:url(moz-extension://bceda6bd-db91-4d4b-8272-40780d0c9a2f/ab20.png);}#yddContainer{background:#fff;border-color:#4b7598}#yddTopBorderlr{border-color:#f0f8fc}#yddWrapper .ydd-sp{background-image:url(moz-extension://bceda6bd-db91-4d4b-8272-40780d0c9a2f/ydd-sprite.png)}#yddWrapper a,#yddWrapper a:hover,#yddWrapper a:visited{color:#50799b}#yddWrapper .ydd-tabs{color:#959595}.ydd-tabs,.ydd-tab{background:#fff;border-color:#d5e7f3}#yddBottom{color:#363636}#yddWrapper{min-width:250px;max-width:400px;}</style></html>
