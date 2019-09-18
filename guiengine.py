@@ -185,10 +185,10 @@ class GuiEngine(threading.Thread):
             [self.stimuli[id].reset(**stimulus_arg[id]) for id in stimulus_arg] #更新刺激实例的参数
             self.ask_4_update_gui = True  #请求刷新
             self.lock.release()
-        print('>>> guiengine sub thread ended')
+        print('[guiengine] sub thread ended')
 
     def StartRun(self):
-        print('>>> gui engine started')
+        print('[guiengine] process started')
         self.E_g2c.set()
         clock = pygame.time.Clock()
         # END = 0
@@ -223,7 +223,7 @@ class GuiEngine(threading.Thread):
 
         pygame.quit()
         for ID in self.__release_ID_list:   del self.stimuli[ID]
-        print('>>> gui engine exit')
+        print('[guiengine] process exit')
 
 if __name__ == '__main__':
     gui = GuiIF() # 建立与GUI交互的接口
