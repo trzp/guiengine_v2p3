@@ -22,7 +22,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/guiengine.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1918">
+            <state relative-caret-position="2636">
               <caret line="127" column="59" selection-start-line="127" selection-start-column="59" selection-end-line="127" selection-end-column="59" />
               <folding>
                 <element signature="e#655#668#0" expanded="true" />
@@ -91,7 +91,8 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../BCIpf" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunDashboard">
@@ -222,7 +223,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/guiengine.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1918">
+        <state relative-caret-position="2636">
           <caret line="127" column="59" selection-start-line="127" selection-start-column="59" selection-end-line="127" selection-end-column="59" />
           <folding>
             <element signature="e#655#668#0" expanded="true" />

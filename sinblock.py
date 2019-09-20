@@ -99,5 +99,6 @@ class sinBlock(object):
     def show(self):
         if self.visible:
             if self.sur!=None:  self.root.blit(self.sur,self.blitp)
-            pygame.draw.rect(self.root,self.bordercolor,pygame.Rect(self.blitpborder,self.size),1)
+            pygame.draw.rect(self.root, self.bordercolor, pygame.Rect(
+                    self.blitpborder, self.size), 1)
 
