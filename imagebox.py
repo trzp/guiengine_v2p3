@@ -11,29 +11,29 @@ import os
 
 
 class Imagebox(object):
-    image = ''
-    size = (0, 0)
-    position = (0, 0)
-    anchor = 'lefttop'
-    text = ''
-    textcolor = (0, 255, 255)
-    textfont = 'arial'
-    textsize = 10
-    textanchor = 'lefttop'
-    borderon = False
-    borderwidth = 1
-    bordercolor = (255, 255, 255)
-    textbold = False
-    layer = 0
-    visible = False
-
-    parmkeys = ['image', 'size', 'position', 'anchor', 'text', 'textcolor', 'textfont', 'textsize',
-                'textanchor', 'borderon', 'borderwidth', 'bordercolor', 'layer', 'visible', 'textbold',
-                ]
-    sur = None
-    blitp = (0, 0)
-
     def __init__(self, root, **argw):
+        self.image = ''
+        self.size = (0, 0)
+        self.position = (0, 0)
+        self.anchor = 'lefttop'
+        self.text = ''
+        self.textcolor = (0, 255, 255)
+        self.textfont = 'arial'
+        self.textsize = 10
+        self.textanchor = 'lefttop'
+        self.borderon = False
+        self.borderwidth = 1
+        self.bordercolor = (255, 255, 255)
+        self.textbold = False
+        self.layer = 0
+        self.visible = False
+
+        self.parmkeys = ['image', 'size', 'position', 'anchor', 'text', 'textcolor', 'textfont', 'textsize',
+                    'textanchor', 'borderon', 'borderwidth', 'bordercolor', 'layer', 'visible', 'textbold',
+                    ]
+        self.sur = None
+        self.blitp = (0, 0)
+
         pygame.font.init()
         self.root = root
         if not os.path.isfile(self.textfont):
@@ -41,6 +41,9 @@ class Imagebox(object):
         self.font_object = pygame.font.Font(self.textfont, self.textsize)
         self.font_object.set_bold(self.textbold)
         self.reset(**argw)
+
+    def release(self):
+        pass
 
     def update_parm(self, **argw):
         for item in argw:

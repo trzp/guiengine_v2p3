@@ -18,17 +18,22 @@ update: 2019/5/23
 
 import pygame
 from pygame.locals import *
-from block import Block
-from sinblock import sinBlock
-from mblock import mBlock
-from imagebox import Imagebox
+
+# 批量导入支持的模块，允许扩展
+from modules import MY_MODULES
+
+MODULES = {}
+for script in MY_MODULES:
+    # eg. from block import Block
+    # eg. the Block is callable by MODULES['Block']
+    exec('from %s import %s'%(script,MY_MODULES[script]),MODULES)
+
 from multiprocessing import Queue,Event
 import multiprocessing
 import threading
 import time,math
 import os,platform
 import numpy as np
-
 from rz_global_clock import global_clock
 from marker import Marker
 
@@ -88,7 +93,7 @@ class GuiIF():    #用于向guiengine发射信号
     def update(self,stimulus,marker):
         self.Q_c2g.put([stimulus,marker])
 
-class GuiEngine(threading.Thread):
+class GuiEngine():
     stimuli = {}
     __release_ID_list = []
 
@@ -107,7 +112,7 @@ class GuiEngine(threading.Thread):
         caption: string
         Fps: int, strongly suggest you set Fps as the same with system's Fps
         """
-        super(GuiEngine,self).__init__()
+
         self.Q_c2g = Q_c2g
         self.E_g2c = E_g2c
         self.marker_on = False
@@ -153,20 +158,14 @@ class GuiEngine(threading.Thread):
         #注册刺激，生成实例
         for ID in stims:
             element = stims[ID]
-            if element['class'] == 'Block': self.stimuli[ID] = Block(self.screen,**element['parm'])
-            elif element['class'] == 'Imagebox':self.stimuli[ID] = Imagebox(self.screen,**element['parm'])
-            elif element['class'] == 'sinBlock':
-                self.stimuli[ID] = sinBlock(self.screen,**element['parm'])
-                self.__update_per_frame_list.append(self.stimuli[ID])   #帧刷新对象的列表
-            elif element['class'] == 'mBlock':
-                self.stimuli[ID] = mBlock(self.screen,**element['parm'])
-                self.__update_per_frame_list.append(self.stimuli[ID])
-            else:   pass
+            clas = element['class']
+            if clas in MODULES:
+                self.stimuli[ID] = MODULES[clas](self.screen,**element['parm'])
 
-        self.setDaemon(True)                #子线程随主线程退出
-        self.start()
+        backthread = threading.Thread(target = self.backthreadfun, args = (), daemon = True)
+        backthread.start()
 
-    def run(self):  #接收刷新请求字典
+    def backthreadfun(self):  #接收刷新请求字典
         # arg = self.Q_c2g.get()
         # arg可能的形式：
         #     1. 单字符串：'_q_u_i_t_' -> 结束标志
@@ -194,8 +193,6 @@ class GuiEngine(threading.Thread):
         # END = 0
         while True:
             self.screen.fill(self.screen_color)
-            #需要帧刷新的对象进行相应更新
-            [sti.update_per_frame() for sti in self.__update_per_frame_list]
 
             if self.ask_4_update_gui:   #子线程请求刷新
                 self.update_in_this_frame = True #将在这一帧刷新
@@ -222,7 +219,8 @@ class GuiEngine(threading.Thread):
             if self.stp:    break  #只能通过主控结束
 
         pygame.quit()
-        for ID in self.__release_ID_list:   del self.stimuli[ID]
+        [self.stimuli[id].release() for id in self.stimuli] #更新刺激实例的参数
+
         print('[guiengine] process exit')
 
 if __name__ == '__main__':
@@ -232,7 +230,7 @@ if __name__ == '__main__':
     gui.wait()    # 等待GUI启动
     time.sleep(1)
     gui.update({'cue':{'start':True}},{})  # 更新GUI且发送marker
-    # time.sleep(1)
-    # gui.update({'cue': {'start': False}}, {'cue_start': {'value': [0]}}) # 更新GUI且发送marker
-    time.sleep(100)
+    time.sleep(1)
+    gui.update({'cue': {'start': False}},{}) # 更新GUI且发送marker
+    time.sleep(1)
     gui.quit()

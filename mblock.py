@@ -8,7 +8,7 @@
 import pygame
 from pygame_anchors import *
 import os
-from copy import deepcopy
+from copy import copy
 
 
 class mBlock(object):
@@ -16,38 +16,40 @@ class mBlock(object):
     used for generate m-sequence stimulus. i.e. vary at each frame accodring to the sequence.
     all the stimulus type with behavior control at each frame should regesit with a key of "perframe"
     '''
-    size = (5, 5)
-    position = (0, 0)
-    anchor = 'center'
-    forecolor1 = (255, 255, 255, 255)
-    forecolor0 = (255, 0, 0, 255)
-
-    borderon = False
-    borderwidth = 1
-    bordercolor = (0, 0, 0, 0)
-
-    textcolor = (0, 255, 255, 0)
-    textfont = 'arial'
-    textanchor = 'center'
-    textsize = 10
-    textbold = False
-    text = ''
-
-    m_sequence = None
-    repetition = 1
-    layer = 0
-    visible = False     #刺激可见
-    start = False          #刺激开始
-
-
-    _sequence = []
-    parmkeys = ['size', 'position', 'anchor', 'borderon', 'borderwidth', 'bordercolor',
-                'forecolor1', 'textcolor', 'textfont', 'textanchor', 'textsize', 'textbold',
-                'text', 'layer', 'visible', 'm_sequence', 'repetition', 'start','forecolor0']
-    sur = None
-    blitp = (0,0)
-
+    
     def __init__(self, root, **argw):
+        self.size = (5, 5)
+        self.position = (0, 0)
+        self.anchor = 'center'
+        self.forecolor1 = (255, 255, 255)
+        self.forecolor0 = (255, 0, 0)
+
+        self.borderon = False
+        self.borderwidth = 1
+        self.bordercolor = (0, 0, 0, 0)
+
+        self.textcolor = (0, 255, 255, 0)
+        self.textfont = 'arial'
+        self.textanchor = 'center'
+        self.textsize = 10
+        self.textbold = False
+        self.text = ''
+
+        self.m_sequence = None
+        self.repetition = 1
+        self.layer = 0
+        self.visible = False  # 刺激可见
+        self.start = False  # 刺激开始
+
+        self._sequence = []
+        self.parmkeys = ['size', 'position', 'anchor', 'borderon', 'borderwidth', 'bordercolor',
+                    'forecolor1', 'textcolor', 'textfont', 'textanchor', 'textsize', 'textbold',
+                    'text', 'layer', 'visible', 'm_sequence', 'repetition', 'start', 'forecolor0']
+        self.sur = None
+        self.txtsur = None
+        self.blitp = (0, 0)
+        self.txtblitp = (0,0)
+        
         pygame.font.init()
         self.root = root
         self.reset(**argw)
@@ -57,11 +59,14 @@ class mBlock(object):
         self.font_object = pygame.font.Font(self.textfont, self.textsize)
         self.font_object.set_bold(self.textbold)
 
+    def release(self):
+        pass
+
     def update_parm(self, **argw):
         for item in argw:
             exec('self.%s = argw[item]' % (item))
 
-    def update_per_frame(self):  #每一帧被调用一次
+    def show(self):  #每一帧被调用一次
         if self.visible:
             if self.start:
                 if len(self._sequence) == 0:    #没有了就画forecolor0颜色
@@ -75,30 +80,32 @@ class mBlock(object):
             else:
                 self.sur.fill(self.forecolor0)
 
+            if self.sur != None:
+                if self.txtsur is not None:
+                    self.sur.blit(self.txtsur,self.txtblitp)
+
+                self.root.blit(self.sur,self.blitpborder)
+
+            if self.borderon:
+                pygame.draw.rect(self.root, self.bordercolor, pygame.Rect(
+                    self.blitpborder, self.size), self.borderwidth)
+
+
     def reset(self, **argw):
         self.update_parm(**argw)
         self.blitp = self.blitpborder = blit_pos1(self.size, self.position, self.anchor)
         self.sur = pygame.Surface(self.size)
         self.sur.fill(self.forecolor0)
 
-        if argw.has_key('start'):
+        if 'start' in argw:
             if argw['start']:
-                self._sequence = deepcopy(self.m_sequence)
+                self._sequence = copy(self.m_sequence)
                 if self.repetition > 0:
                     self._sequence *= self.repetition
 
         if self.text != '':
-            txt = self.font_object.render(self.text, 1, self.textcolor)
+            self.txtsur = self.font_object.render(self.text, 1, self.textcolor)
             p0 = getcorner(self.sur.get_size(), self.textanchor)
-            p = blit_pos(txt, p0, self.textanchor)
-            self.sur.blit(txt, p)
-
-    def show(self):
-        if self.visible:
-            if self.sur != None:
-                if self.__draw: self.sur.fill(self.forecolor1)
-                else:           self.sur.fill(self.forecolor0)
-                self.root.blit(self.sur, self.blitp)
-            if self.borderon:
-                pygame.draw.rect(self.root, self.bordercolor, pygame.Rect(
-                    self.blitpborder, self.size), self.borderwidth)
+            self.txtblitp = blit_pos(self.txtsur, p0, self.textanchor)
+        else:
+            self.txtsur = None

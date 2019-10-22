@@ -17,42 +17,46 @@ class sinBlock(object):
     '''
     used for generate sin type stimulus. i.e. the gray vary at each frame accodring to the sequence.
     '''
-    size = (5,5)
-    position = (0,0)
-    anchor = 'center'
-    forecolor0 = (0,0,0)
-    forecolor1 = (255,255,255)
 
-    bordercolor = (0,0,0,0)
-    borderon = False
-    borderwidth = 1
+    def __init__(self, root, **argw):
+        self.size = (5,5)
+        self.position = (0,0)
+        self.anchor = 'center'
+        self.forecolor0 = (0,0,0)
+        self.forecolor1 = (255,255,255)
 
-    textcolor = (0,255,255,0)
-    textfont = 'arial'
-    textanchor = 'center'
-    textsize = 10
-    textbold = False
-    text = ''
-    
-    frequency = 10
-    init_phase = 0
-    duration = float('inf')
-    start = False
-    __fcolor = None
+        self.bordercolor = (0,0,0,0)
+        self.borderon = False
+        self.borderwidth = 1
 
-    layer = 0
-    visible = False
+        self.textcolor = (0,255,255,0)
+        self.textfont = 'arial'
+        self.textanchor = 'center'
+        self.textsize = 10
+        self.textbold = False
+        self.text = ''
 
-    coef = np.array([0,0,0])
-    parmkeys = ['size','position','anchor',
-                'forecolor0','forecolor1','textcolor','textfont','textanchor','textsize','textbold',
-                'text','layer','visible','frequency','init_phase','duration','start',
-                'borderon', 'borderwidth', 'bordercolor',]
-    sur = None
-    blitp = (0,0)
-    clk = clock()
+        self.frequency = 10
+        self.init_phase = 0
+        self.duration = float('inf')
+        self.start = False
+        self.__fcolor = None
 
-    def __init__(self,root,**argw):
+        self.layer = 0
+        self.visible = False
+
+        self.coef = np.array([0,0,0])
+        self.parmkeys = ['size','position','anchor',
+                    'forecolor0','forecolor1','textcolor','textfont','textanchor','textsize','textbold',
+                    'text','layer','visible','frequency','init_phase','duration','start',
+                    'borderon', 'borderwidth', 'bordercolor',]
+        self.sur = None
+        self.blitp = (0,0)
+        self.clk = clock()
+
+        self.txtsur = None
+        self.txtblitp = (0,0)
+
         pygame.font.init()
         self.root = root
 
@@ -61,10 +65,13 @@ class sinBlock(object):
         self.font_object = pygame.font.Font(self.textfont,self.textsize)
         self.font_object.set_bold(self.textbold)
 
+    def release(self):
+        pass
+
     def update_parm(self,**argw):
         for item in argw:   exec('self.%s = argw[item]'%(item))
         
-    def update_per_frame(self):
+    def show(self):
         if self.visible:
             if self.start:
                 tt = clock()
@@ -79,6 +86,14 @@ class sinBlock(object):
                 # self.sur.fill(self.forecolor0)
                 pass
 
+            if self.txtsur is not None:
+                self.sur.blit(self.txtsur,self.txtblitp)
+
+            self.root.blit(self.sur,self.blitp)
+            if self.borderon:
+                pygame.draw.rect(self.root, self.bordercolor, pygame.Rect(
+                    self.blitpborder, self.size), self.borderwidth)
+
     def reset(self,**argw): #接受主控的控制
         self.update_parm(**argw)
         self.blitp = self.blitpborder = blit_pos1(self.size,self.position,self.anchor)
@@ -91,14 +106,9 @@ class sinBlock(object):
                 self.clk = clock()
 
         if self.text != '':
-            txt = self.font_object.render(self.text, 1, self.textcolor)
+            self.txtsur = self.font_object.render(self.text, 1, self.textcolor)
             p0 = getcorner(self.sur.get_size(), self.textanchor)
-            p = blit_pos(txt, p0, self.textanchor)
-            self.sur.blit(txt, p)
-
-    def show(self):
-        if self.visible:
-            if self.sur!=None:  self.root.blit(self.sur,self.blitp)
-            pygame.draw.rect(self.root, self.bordercolor, pygame.Rect(
-                    self.blitpborder, self.size), 1)
+            self.txtblitp = blit_pos(self.txtsur, p0, self.textanchor)
+        else:
+            self.txtsur = None
 

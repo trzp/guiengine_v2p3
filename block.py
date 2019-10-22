@@ -11,36 +11,35 @@ import os
 
 
 class Block(object):
-    size = (5, 5)
-    position = (0, 0)
-    anchor = 'center'
-    forecolor = (255, 255, 255, 255)
+    def __init(self,root,**argw):
+        self.size = (5, 5)
+        self.position = (0, 0)
+        self.anchor = 'center'
+        self.forecolor = (255, 255, 255, 255)
 
-    borderon = False
-    borderwidth = 2
-    bordercolor = (0, 0, 0, 0)
+        self.borderon = False
+        self.borderwidth = 2
+        self.bordercolor = (0, 0, 0, 0)
 
-    textcolor = (0, 255, 255, 0)
-    textfont = 'arial'
-    textanchor = 'center'
-    textsize = 10
-    textbold = False
-    text = ''
+        self.textcolor = (0, 255, 255, 0)
+        self.textfont = 'arial'
+        self.textanchor = 'center'
+        self.textsize = 10
+        self.textbold = False
+        self.text = ''
 
-    layer = 0
-    visible = False
+        self.layer = 0
+        self.visible = False
 
-    parmkeys = ['size', 'position', 'anchor', 'borderon', 'borderwidth', 'bordercolor',
-                'forecolor', 'textcolor', 'textfont', 'textanchor', 'textsize', 'textbold',
-                'text', 'layer', 'visible']
-    sur = None
-    blitp = (0, 0)
+        self.parmkeys = ['size', 'position', 'anchor', 'borderon', 'borderwidth', 'bordercolor',
+                    'forecolor', 'textcolor', 'textfont', 'textanchor', 'textsize', 'textbold',
+                    'text', 'layer', 'visible']
+        self.sur = None
+        self.blitp = (0, 0)
 
-    def __init__(self, root, **argw):
         pygame.font.init()
         self.root = root
         self.transparent = False
-
 
         if not os.path.isfile(self.textfont):
             self.textfont = pygame.font.match_font(self.textfont)
@@ -52,6 +51,9 @@ class Block(object):
             self.textfont = pygame.font.match_font(self.textfont)
         self.font_object = pygame.font.Font(self.textfont, self.textsize)
         self.font_object.set_bold(self.textbold)
+
+    def release(self):
+        pass
 
     def update_parm(self, **argw):  # 接收新的参数
         for item in argw:
@@ -74,7 +76,6 @@ class Block(object):
             self.transparent = True
         else:
             self.transparent = False
-  # return self.sur,self.blitp
 
     def show(self):  # 显示到screen
         if self.visible:
